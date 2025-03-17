@@ -20,18 +20,38 @@ export class JoinPage {
       .nth(0)
       .locator("span:nth-child(2)");
 
-    // 비밀번호 설정 성공 메시지 선택
+    // 비밀번호 입력값 유효 메시지 선택
     this.passSuccessMessage = page
       .locator("div.member__input-guide-line--success")
       .nth(0)
       .locator("span:nth-child(2)");
+
+    // 비밀번호 확인 오류 메시지 선택
+    this.passCheckErrorMessage = page
+      .locator(
+        "div:nth-child(3) > .member__input-field > .member__input-guide-area > .member__input-guide-line > span"
+      )
+      .nth(1);
+
+    // 비밀번호 확인 입력값 유효 메시지 선택
+    this.passCheckSuccessMessage = page
+      .locator(
+        "div:nth-child(3) > .member__input-field > .member__input-guide-area > .member__input-guide-line > span"
+      )
+      .nth(1);
 
     // 이메일 유효 표시 아이콘 선택
     this.emailVaild = page.locator(
       "span[class*='member__input-group'][class*='member__input-group--validator'][class*='_joinEmailValid']"
     );
 
+    // 비밀번호 유효 표시 아이콘 선택
     this.passVaild = page.locator("#__join__password__valid");
+
+    // 비밀번호 확인 입력값 유효 표시 아이콘 선택
+    this.passCheckVaild = page.locator(
+      "span[class*='member__input-group'][class*='member__input-group--validator'][class*='_joinPasswordAgainValid']"
+    );
 
     // 로그인 버튼과 비밀번호 찾기 버튼 요소 선택
     this.loginButton = page.locator("a.join__button", { hasText: "로그인" });
@@ -76,8 +96,18 @@ export class JoinPage {
     return await this.passErrorMessage.textContent();
   }
 
-  // 비밀번호 설정 성공 메시지 확인
+  // 비밀번호 입력값 유효 메시지 확인
   async getPassSuccessMessage() {
     return await this.passSuccessMessage.textContent();
+  }
+
+  // 비밀번호 확인 오류 메시지 확인
+  async getPassCheckErrorMessage() {
+    return await this.passCheckErrorMessage.textContent();
+  }
+
+  // 비밀번호 확인 입력값 유효 메시지 확인
+  async getPassCheckSuccessMessage() {
+    return await this.passCheckSuccessMessage.textContent();
   }
 }

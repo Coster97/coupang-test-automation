@@ -255,3 +255,62 @@ test("SIGN_TC015: 모든 비밀번호 조건 충족 시 정상 입력 처리", a
 });
 
 // ---------- 비밀번호 확인 유효성 검사 ----------
+
+// SIGN_TC016
+test("SIGN_TC016: 비밀번호 확인 필드 포커스 시 입력 요구 툴팁 표시", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.passCheckInput.focus();
+  await joinPage.getPassCheckErrorMessage();
+
+  console.log(joinPage.getPassCheckErrorMessage());
+
+  expect(joinPage.passCheckErrorMessage).toBeVisible();
+  expect(joinPage.passCheckErrorMessage).toHaveCSS(
+    "color",
+    "rgb(136, 136, 136)"
+  );
+});
+
+// SIGN_TC017
+test("SIGN_TC017: 비밀번호 필드와 비밀번호 확인 필드의 값이 다를 시 오류 표시", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.passInput.fill("test1357!");
+  await joinPage.passCheckInput.fill("test135!");
+  await joinPage.getPassCheckErrorMessage();
+
+  expect(joinPage.passCheckErrorMessage).toBeVisible();
+  expect(joinPage.passCheckErrorMessage).toHaveText(
+    "새 비밀번호가 일치하지 않습니다."
+  );
+  expect(joinPage.passCheckErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC018
+test("SIGN_TC018: 올바른 비밀번호 입력 시 정상 처리", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.passInput.fill("test1357!");
+  await joinPage.passCheckInput.fill("test1357!");
+  await joinPage.getPassCheckSuccessMessage();
+
+  expect(joinPage.passCheckSuccessMessage).toBeVisible();
+  expect(joinPage.passCheckSuccessMessage).toHaveText(
+    "새 비밀번호가 일치합니다."
+  );
+  expect(joinPage.passCheckSuccessMessage).toHaveCSS(
+    "color",
+    "rgb(0, 137, 26)"
+  );
+  expect(joinPage.passCheckVaild).toBeVisible();
+});
+
+//
