@@ -13,6 +13,13 @@ export class LoginPage {
     this.integrationErrorMessage = page.locator(
       "div.member__message-area--error._loginCommonError"
     );
+
+    this.clearButton = page.locator(
+      "button[class*='member__util-trigger'][class*='_loginIdClear']"
+    );
+    this.passToText = page.locator(
+      "button[class*='member__util-trigger'][class*='_loginPasswordShowTrigger']"
+    );
   }
 
   async goto() {
