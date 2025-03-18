@@ -16,7 +16,7 @@ test("SIGN_TC001: 이미 가입된 이메일 사용 시 오류 표시", async ({
   expect(joinPage.emailErrorMessage).toHaveText(
     "이미 가입된 이메일 주소입니다."
   );
-
+  expect(joinPage.emailErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
   expect(joinPage.loginButton).toHaveText("로그인");
   expect(joinPage.findPasswordButton).toHaveText("비밀번호 찾기");
 });
@@ -36,6 +36,7 @@ test("SIGN_TC002: 올바르지 않은 이메일 형식 입력 시 오류 표시"
   expect(joinPage.emailErrorMessage).toHaveText(
     "이메일을 올바르게 입력해주세요."
   );
+  expect(joinPage.emailErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
 });
 
 // SIGN_TC003
@@ -53,6 +54,7 @@ test("SIGN_TC003: 이메일 내 한글 또는 특수문자가 포함될 시 오�
   expect(joinPage.emailErrorMessage).toHaveText(
     "이메일을 올바르게 입력해주세요."
   );
+  expect(joinPage.emailErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
 });
 
 // SIGN_TC004
@@ -591,5 +593,177 @@ test("SIGN_TC036: 항목별 이용 약관 모달 닫힘 확인", async ({ page }
 
 // ---------- 필수 입력값 누락 검사 ----------
 
+// SIGN_TC037
+test("SIGN_TC037: 아이디(이메일) 필드가 비어 있을 시 오류 메시지 및 자동 포커싱 확인", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
 
-test()
+  await joinPage.goto();
+  await joinPage.join("", "Pass135!", "Pass135!", "테스터", "01100009000");
+  await joinPage.checkAll.click();
+  await joinPage.joinButton.click();
+  await joinPage.getEmailErrorMessage();
+
+  expect(joinPage.emailInput).toBeFocused();
+  expect(joinPage.emailErrorMessage).toBeVisible();
+  expect(joinPage.emailErrorMessage).toHaveText("이메일을 입력하세요.");
+  expect(joinPage.emailErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC038
+test("SIGN_TC038: 비밀번호 필드가 비어 있을 시 오류 메시지 및 자동 포커싱 확인", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.join(
+    "validuser@example.com",
+    "",
+    "Pass135!",
+    "테스터",
+    "01100009000"
+  );
+  await joinPage.checkAll.click();
+  await joinPage.joinButton.click();
+  await joinPage.getPassErrorMessage();
+
+  expect(joinPage.passInput).toBeFocused();
+
+  expect(joinPage.passGuide1).toBeVisible();
+  expect(joinPage.passGuide1).toHaveText(
+    "영문/숫자/특수문자 2가지 이상 조합 (8~20자)"
+  );
+  expect(joinPage.passGuide1).toHaveCSS("color", "rgb(229, 37, 40)");
+
+  expect(joinPage.passGuide2).toBeVisible();
+  expect(joinPage.passGuide2).toHaveText(
+    "3개 이상 연속되거나 동일한 문자/숫자 제외"
+  );
+  expect(joinPage.passGuide2).toHaveCSS("color", "rgb(229, 37, 40)");
+
+  expect(joinPage.passGuide3).toBeVisible();
+  expect(joinPage.passGuide3).toHaveText("아이디(이메일) 제외");
+  expect(joinPage.passGuide3).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC039
+test("SIGN_TC039: 비밀번호 확인 필드가 비어 있을 시 오류 메시지 및 자동 포커싱 확인", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.join(
+    "validuser@example.com",
+    "Pass135!",
+    "Pass135!",
+    "테스터",
+    "01100009000"
+  );
+  await joinPage.checkAll.click();
+  await joinPage.joinButton.click();
+  await joinPage.getPassCheckErrorMessage();
+
+  expect(joinPage.passCheckInput).toBeFocused();
+  expect(joinPage.passCheckErrorMessage).toBeVisible();
+  expect(joinPage.passCheckErrorMessage).toHaveText(
+    "확인을 위해 새 비밀번호를 다시 입력해주세요."
+  );
+  expect(joinPage.passCheckErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC040
+test("SIGN_TC040: 이름 필드가 비어 있을 시 오류 메시지 및 자동 포커싱 확인", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.join(
+    "validuser@example.com",
+    "Pass135!",
+    "Pass135!",
+    "",
+    "01100009000"
+  );
+  await joinPage.checkAll.click();
+  await joinPage.joinButton.click();
+  await joinPage.getNameErrorMessage();
+
+  expect(joinPage.nameInput).toBeFocused();
+  expect(joinPage.nameErrorMessage).toBeVisible();
+  expect(joinPage.nameErrorMessage).toHaveText("이름을 정확히 입력하세요.");
+  expect(joinPage.nameErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC041
+test("SIGN_TC041: 휴대폰 번호 필드가 비어 있을 시 오류 메시지 및 자동 포커싱 확인", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.join(
+    "validuser@example.com",
+    "Pass135!",
+    "Pass135!",
+    "테스터",
+    ""
+  );
+  await joinPage.checkAll.click();
+  await joinPage.joinButton.click();
+  await joinPage.getPhoneErrorMessage();
+
+  expect(joinPage.phoneInput).toBeFocused();
+  expect(joinPage.phoneErrorMessage).toBeVisible();
+  expect(joinPage.phoneErrorMessage).toHaveText(
+    "휴대폰 번호를 정확하게 입력하세요."
+  );
+  expect(joinPage.phoneErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// // ---------- 가입 완료 플로우 검사 ----------
+
+// // SIGN_TC042
+// test("SIGN_TC042: 모든 필드 입력 및 전체 약관 동의 가입 플로우 확인", async ({
+//   page,
+// }) => {
+//   const joinPage = new JoinPage(page);
+
+//   await joinPage.goto();
+//   await joinPage.join(
+//     "validuser@example.com",
+//     "Pass135!",
+//     "Pass135!",
+//     "테스터",
+//     "01100009000"
+//   );
+//   await joinPage.checkAll.click();
+//   await joinPage.joinButton.click();
+// });
+
+// // SIGN_TC043
+// test("SIGN_TC043: 모든 필드 입력 및 필수 약관 동의 가입 플로우 확인", async ({
+//   page,
+// }) => {
+//   const joinPage = new JoinPage(page);
+
+//   await joinPage.goto();
+//   await joinPage.join(
+//     "validuser@example.com",
+//     "Pass135!",
+//     "Pass135!",
+//     "테스터",
+//     "01100009000"
+//   );
+
+//   await joinPage.checkAll.click();
+//   for (const [key, checkbox] of Object.entries(joinPage.checkboxes())) {
+//     if (key == "marketing") {
+//       await checkbox.click();
+//     }
+//   }
+//   await joinPage.joinButton.click();
+// });
