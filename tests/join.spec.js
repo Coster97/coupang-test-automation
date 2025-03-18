@@ -313,4 +313,204 @@ test("SIGN_TC018: 올바른 비밀번호 입력 시 정상 처리", async ({ pag
   expect(joinPage.passCheckVaild).toBeVisible();
 });
 
-//
+// ---------- 이름 유효성 검사 ----------
+
+// SIGN_TC019
+test("SIGN_TC019: 이름이 2자 미만일 시 오류 표시", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.nameInput.fill("테");
+  await joinPage.phoneInput.focus();
+  await joinPage.getNameErrorMessage();
+
+  expect(joinPage.nameErrorMessage).toBeVisible();
+  expect(joinPage.nameErrorMessage).toHaveText("이름을 정확히 입력하세요.");
+  expect(joinPage.nameErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC020
+test("SIGN_TC020: 이름 앞에 공백이 포함될 시 오류 표시", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.nameInput.fill(" 테스터");
+  await joinPage.phoneInput.focus();
+  await joinPage.getNameErrorMessage();
+
+  expect(joinPage.nameErrorMessage).toBeVisible();
+  expect(joinPage.nameErrorMessage).toHaveText("이름을 정확히 입력하세요.");
+  expect(joinPage.nameErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC021
+test("SIGN_TC021: 이름 뒤에 공백이 포함될 시 오류 표시", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.nameInput.fill("테스터 ");
+  await joinPage.phoneInput.focus();
+  await joinPage.getNameErrorMessage();
+
+  expect(joinPage.nameErrorMessage).toBeVisible();
+  expect(joinPage.nameErrorMessage).toHaveText("이름을 정확히 입력하세요.");
+  expect(joinPage.nameErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC022
+test("SIGN_TC022: 이름에 특수문자가 포함될 시 오류 표시", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.nameInput.fill("테스터@");
+  await joinPage.phoneInput.focus();
+  await joinPage.getNameErrorMessage();
+
+  expect(joinPage.nameErrorMessage).toBeVisible();
+  expect(joinPage.nameErrorMessage).toHaveText("이름을 정확히 입력하세요.");
+  expect(joinPage.nameErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC023
+test("SIGN_TC023: 이름에 숫자가 포함될 시 오류 표시", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.nameInput.fill("테스터1");
+  await joinPage.phoneInput.focus();
+  await joinPage.getNameErrorMessage();
+
+  expect(joinPage.nameErrorMessage).toBeVisible();
+  expect(joinPage.nameErrorMessage).toHaveText("이름을 정확히 입력하세요.");
+  expect(joinPage.nameErrorMessage).toHaveCSS("color", "rgb(229, 37, 40)");
+});
+
+// SIGN_TC024
+test("SIGN_TC024: 올바른 이름 입력 시 정상 처리", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.nameInput.fill("테스터");
+  await joinPage.phoneInput.focus();
+
+  await page.waitForSelector("span._joinNameValid", {
+    state: "visible",
+    timeout: 7000,
+  });
+  await expect(joinPage.nameValid).toBeVisible();
+});
+
+// ---------- 휴대폰 번호 유효성 검사 ----------
+
+// // SIGN_TC025
+// test("SIGN_TC025: 이미 가입된 휴대폰 번호일 시 오류 표시", async ({ page }) => {
+//   const joinPage = new JoinPage(page);
+
+//   await joinPage.goto();
+//   await joinPage.phoneInput.fill("010 8021 9867");
+//   await joinPage.nameInput.focus();
+//   await joinPage.getPhoneErrorMessage();
+
+//   expect(joinPage.phoneErrorMessage).toBeVisible();
+//   expect(joinPage.phoneErrorMessage).toHaveText(
+//     "아이디(이메일)로 가입된 휴대폰 번호입니다."
+//   );
+// });
+
+// SIGN_TC026
+test("SIGN_TC026: 휴대폰 번호가 10자 미만일 시 오류 표시 (공백제외)", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.phoneInput.fill("010 123 456");
+  await joinPage.nameInput.focus();
+  await joinPage.getPhoneErrorMessage();
+
+  expect(joinPage.phoneErrorMessage).toBeVisible();
+  expect(joinPage.phoneErrorMessage).toHaveText(
+    "휴대폰 번호를 정확하게 입력하세요."
+  );
+});
+
+// SIGN_TC027
+test("SIGN_TC027: 휴대폰 번호가 11자 초과일 시 오류 표시 (공백제외)", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.phoneInput.fill("010 1234 56789");
+  await joinPage.nameInput.focus();
+  await joinPage.getPhoneErrorMessage();
+
+  expect(joinPage.phoneErrorMessage).toBeVisible();
+  expect(joinPage.phoneErrorMessage).toHaveText(
+    "휴대폰 번호를 정확하게 입력하세요."
+  );
+});
+
+// SIGN_TC028
+test("SIGN_TC028: 휴대폰 번호 국번 010, 011 외 오류 표시", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.phoneInput.fill("012 1234 5678");
+  await joinPage.nameInput.focus();
+  await joinPage.getPhoneErrorMessage();
+
+  expect(joinPage.phoneErrorMessage).toBeVisible();
+  expect(joinPage.phoneErrorMessage).toHaveText(
+    "휴대폰 번호를 정확하게 입력하세요."
+  );
+});
+
+// SIGN_TC029
+test("SIGN_TC029: 휴대폰 번호에 문자가 포함될 시 오류 표시", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.phoneInput.fill("010 8021 9867a");
+  await joinPage.nameInput.focus();
+  await joinPage.getPhoneErrorMessage();
+
+  expect(joinPage.phoneErrorMessage).toBeVisible();
+  expect(joinPage.phoneErrorMessage).toHaveText(
+    "휴대폰 번호를 정확하게 입력하세요."
+  );
+});
+
+// SIGN_TC030
+test("SIGN_TC030: 휴대폰 번호에 특수문자가 포함될 시 오류 표시 (공백제외)", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.phoneInput.fill("010 8021 9867!");
+  await joinPage.nameInput.focus();
+  await joinPage.getPhoneErrorMessage();
+
+  expect(joinPage.phoneErrorMessage).toBeVisible();
+  expect(joinPage.phoneErrorMessage).toHaveText(
+    "휴대폰 번호를 정확하게 입력하세요."
+  );
+});
+
+// // SIGN_TC031
+// test("SIGN_TC031: 올바른 휴대폰 번호 입력 시 정상 처리", async ({ page }) => {
+//   const joinPage = new JoinPage(page);
+
+//   await joinPage.goto();
+//   await joinPage.phoneInput.fill("01100009000");
+//   await joinPage.nameInput.focus();
+
+//   await page.waitForSelector("span._joinPhoneValid", {
+//     state: "visible",
+//     timeout: 7000,
+//   });
+//   await expect(joinPage.phoneValid).toBeVisible();
+// });

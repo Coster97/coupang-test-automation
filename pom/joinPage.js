@@ -14,7 +14,7 @@ export class JoinPage {
     this.passGuide2 = page.locator("div.member__input-guide-line").nth(1);
     this.passGuide3 = page.locator("div.member__input-guide-line").nth(2);
 
-    // 비밀번호 오류 메시지 선택
+    // 비밀번호 입력값 오류 메시지 선택
     this.passErrorMessage = page
       .locator("div.member__input-guide-line--error")
       .nth(0)
@@ -40,6 +40,18 @@ export class JoinPage {
       )
       .nth(1);
 
+    // 이름 입력값 오류 메시지 선택
+    this.nameErrorMessage = page
+      .locator(
+        "div[class*='member__message-area'][class*='member__message-area--error']"
+      )
+      .filter({ hasText: "이름을 정확히 입력하세요" });
+
+    // 휴대폰 번호 입력값 오류 메시지 선택
+    this.phoneErrorMessage = page.locator(
+      "div._joinPhoneExpand > .member__message-area--error"
+    );
+
     // 이메일 유효 표시 아이콘 선택
     this.emailVaild = page.locator(
       "span[class*='member__input-group'][class*='member__input-group--validator'][class*='_joinEmailValid']"
@@ -52,6 +64,12 @@ export class JoinPage {
     this.passCheckVaild = page.locator(
       "span[class*='member__input-group'][class*='member__input-group--validator'][class*='_joinPasswordAgainValid']"
     );
+
+    // 이름 입력값 유효 표시 아이콘 선택
+    this.nameValid = page.locator("span._joinNameValid");
+
+    // 휴대폰 번호 입력값 유효 표시 아이콘 선택
+    this.phoneValid = page.locator("span._joinPhoneValid");
 
     // 로그인 버튼과 비밀번호 찾기 버튼 요소 선택
     this.loginButton = page.locator("a.join__button", { hasText: "로그인" });
@@ -109,5 +127,15 @@ export class JoinPage {
   // 비밀번호 확인 입력값 유효 메시지 확인
   async getPassCheckSuccessMessage() {
     return await this.passCheckSuccessMessage.textContent();
+  }
+
+  // 이름 입력값 오류 메시지 확인
+  async getNameErrorMessage() {
+    return await this.nameErrorMessage.textContent();
+  }
+
+  // 휴대폰 번호 입력값 오류 메시지 확인
+  async getPhoneErrorMessage() {
+    return await this.phoneErrorMessage.textContent();
   }
 }
