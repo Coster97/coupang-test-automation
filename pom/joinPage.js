@@ -82,11 +82,39 @@ export class JoinPage {
       "div.member__expand-field._joinEmailExpand div.member__message-area--error"
     );
 
-    // 동의하고 가입하기 버튼 선택
+    // 전체동의 체크박스 선택
+    this.checkAll = page.locator("label[for='chk_checkall']");
 
+    // 체크박스를 객체(Map) 형태로 관리
+    this.checkboxes = {
+      fourteen: page.locator("label[for='chk_join-terms-fourteen']"),
+      service: page.locator("label[for='chk_join-terms-service']"),
+      finance: page.locator("label[for='chk_join-terms-commerce']"),
+      privacy: page.locator("label[for='chk_join-terms-privacy-collect-use']"),
+      thirdParty: page.locator(
+        "label[for='chk_agree-to-collect-third-part-information']"
+      ),
+      marketing: page.locator("label[for='chk_POLICY_AGREE_COLLECT']"),
+      ads: page.locator("label[for='chk_agree-to-receive-ads']"),
+      email: page.locator("label[for='chk_POLICY_AGREE_EMAIL']"),
+      sms: page.locator("label[for='chk_POLICY_AGREE_SMS']"),
+      push: page.locator("label[for='chk_POLICY_AGREE_MARKETING_PUSH']"),
+    };
+
+    // 약관 동의 오류 메시지 선택
+    this.checkErrorMessage = page.locator(".error-tip");
+
+    // 동의하고 가입하기 버튼 선택
     this.joinButton = page.locator(
       "button[class*='join__button'][class*='join__button--blue-large-block'][class*='_joinTrigger']"
     );
+
+    // 약관 열기/닫기 버튼 선택
+    this.modalOpenButton = page.locator("button.icon-right-arrow").nth(0);
+    this.modalCloseButton = page.locator("div.icon-close").nth(0);
+
+    // 약관 모달 선택
+    this.modalPage = page.locator(".g-modal");
   }
 
   // 회원가입 페이지로 이동

@@ -514,3 +514,82 @@ test("SIGN_TC030: 휴대폰 번호에 특수문자가 포함될 시 오류 표�
 //   });
 //   await expect(joinPage.phoneValid).toBeVisible();
 // });
+
+// ---------- 약관 동의 버튼 동작 및 팝업 검사 ----------
+
+// SIGN_TC032
+test("SIGN_TC032: 전체 약관 동의 버튼 활성화 동작 검증", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.checkAll.click();
+
+  expect(joinPage.checkAll).toHaveAttribute("aria-checked", "true");
+
+  for (const [key, checkbox] of Object.entries(joinPage.checkboxes)) {
+    await expect(checkbox).toHaveAttribute("aria-checked", "true");
+  }
+});
+
+// SIGN_TC033
+test("SIGN_TC033: 전체 약관 동의 버튼 비활성화 동작 검증", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.checkAll.click();
+  await joinPage.checkAll.click();
+
+  expect(joinPage.checkAll).toHaveAttribute("aria-checked", "false");
+
+  for (const [key, checkbox] of Object.entries(joinPage.checkboxes)) {
+    await expect(checkbox).toHaveAttribute("aria-checked", "false");
+  }
+});
+
+// SIGN_TC034
+test("SIGN_TC034: 필수 약관을 하나라도 선택하지 않을 시 오류 표시", async ({
+  page,
+}) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.checkAll.click();
+
+  for (const [key, checkbox] of Object.entries(joinPage.checkboxes)) {
+    if (key == "fourteen") await checkbox.click();
+  }
+
+  await joinPage.joinButton.click();
+
+  expect(joinPage.checkErrorMessage).toBeVisible();
+  expect(joinPage.checkErrorMessage).toHaveText(
+    "필수 항목에 모두 동의해주세요"
+  );
+  expect(joinPage.checkErrorMessage).toHaveCSS("color", "rgb(203, 20, 0)");
+});
+
+// SIGN_TC035
+test("SIGN_TC035: 항목별 이용 약관 모달 열림 확인", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.modalOpenButton.click();
+
+  expect(joinPage.modalPage).toBeVisible();
+});
+
+// SIGN_TC036
+test("SIGN_TC036: 항목별 이용 약관 모달 닫힘 확인", async ({ page }) => {
+  const joinPage = new JoinPage(page);
+
+  await joinPage.goto();
+  await joinPage.modalOpenButton.click();
+  await joinPage.modalCloseButton.click();
+
+  expect(joinPage.modalPage).toHaveCSS("display", "none");
+});
+
+// ---------- 필수 입력값 누락 검사 ----------
+
+
+test()
