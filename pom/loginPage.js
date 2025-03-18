@@ -33,8 +33,18 @@ export class LoginPage {
 
   // 로그인 페이지로 이동
   async goto() {
+    await this.page.setExtraHTTPHeaders({
+      "sec-ch-ua": `"Chromium";v="125", "Not.A/Brand";v="24"`,
+      "user-agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+      "accept-language": "ko-KR,ko;q=0.9",
+    });
+
     await this.page.goto(
-      "https://login.coupang.com/login/login.pang?rtnUrl=https%3A%2F%2Fwww.coupang.com%2Fnp%2Fpost%2Flogin%3Fr%3Dhttps%253A%252F%252Fwww.coupang.com%252F"
+      "https://login.coupang.com/login/login.pang?rtnUrl=https%3A%2F%2Fwww.coupang.com%2Fnp%2Fpost%2Flogin%3Fr%3Dhttps%253A%252F%252Fwww.coupang.com%252F",
+      {
+        waitUntil: "domcontentloaded",
+      }
     );
   }
 
