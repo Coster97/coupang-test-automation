@@ -2,6 +2,7 @@ export class LoginPage {
   constructor(page) {
     this.page = page;
 
+    // ---------- 이메일 로그인 페이지 ----------
     // 입력 필드 선택
     this.emailInput = page.locator("#login-email-input");
     this.passwordInput = page.locator("#login-password-input");
@@ -31,7 +32,7 @@ export class LoginPage {
     );
   }
 
-  // 로그인 페이지로 이동
+  // 이메일 로그인 페이지로 이동
   async goto() {
     await this.page.setExtraHTTPHeaders({
       "sec-ch-ua": `"Chromium";v="125", "Not.A/Brand";v="24"`,
