@@ -233,6 +233,7 @@ test("SIGN_TC014: 비밀번호가 아이디(이메일) 형식일 시 오류 표�
   const joinPage = new JoinPage(page);
 
   await joinPage.goto();
+  await joinPage.emailInput.fill("validuser@example.com");
   await joinPage.passInput.fill("validuser@example.com");
   await joinPage.passCheckInput.focus();
 
